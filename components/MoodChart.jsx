@@ -1,30 +1,26 @@
 "use client";
-import { Line } from "react-chartjs-2";
-import { Chart as ChartJS, LineElement, CategoryScale, LinearScale, PointElement } from "chart.js";
-
-ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement);
+import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip } from "recharts";
 
 export default function MoodChart({ moods }) {
-  if (!moods.length) return <p>No moods yet. Add your first mood above!</p>;
+  if (!moods || moods.length === 0)
+    return <p className="text-gray-400">No mood data yet. Add some!</p>;
 
-  const data = {
-    labels: moods.map((m) =>
-      new Date(m.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })
-    ),
-    datasets: [
-      {
-        label: "Mood Trend",
-        data: moods.map((m) => m.sentiment || 0),
-        borderColor: "#6366f1",
-        backgroundColor: "rgba(99,102,241,0.2)",
-        tension: 0.3,
-      },
-    ],
-  };
+  const data = moods.map((m) => ({
+    date: new Date(m.createdAt).toLocaleDateString(),
+    rating: m.rating,
+  }));
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
-      <Line data={data} />
+    <div className="bg-gray-800 p-4 rounded-lg shadow-lg">
+      <h2 className="text-xl font-semibold mb-4">Mood Over Time</h2>
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart data={data}>
+          <XAxis dataKey="date" stroke="#ccc" />
+          <YAxis domain={[1, 5]} stroke="#ccc" />
+          <Tooltip />
+          <Line type="monotone" dataKey="rating" stroke="#8884d8" strokeWidth={2} />
+        </LineChart>
+      </ResponsiveContainer>
     </div>
   );
 }
