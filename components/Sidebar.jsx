@@ -17,7 +17,7 @@ export default function Sidebar() {
   const navItems = [
     { name: "Dashboard", href: "/dashboard", icon: "📊" },
     { name: "Profile", href: "/profile", icon: "👤" },
-    { name: "All Moods", href: "/moods", icon: "🧠" },
+    { name: "Moods", href: "/moods", icon: "🧠" },
     { name: "Settings", href: "/settings", icon: "⚙️" },
   ];
 
@@ -27,7 +27,6 @@ export default function Sidebar() {
         isOpen ? "w-64" : "w-16"
       } bg-gray-900 text-gray-100 min-h-screen transition-all duration-300 flex flex-col`}
     >
-      {/* Header */}
       <div className="flex items-center justify-between px-4 py-4 border-b border-gray-700">
         <h1
           className={`text-lg font-bold transition-all duration-300 ${
@@ -44,7 +43,6 @@ export default function Sidebar() {
         </button>
       </div>
 
-      {/* Navigation */}
       <nav className="flex-1 px-2 py-4 space-y-2">
         {navItems.map((item) => (
           <Link
@@ -62,7 +60,6 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      {/* Footer */}
       <div className="p-4 border-t border-gray-700">
         <button
           onClick={handleLogout}
