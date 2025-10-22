@@ -1,0 +1,1 @@
+export default function FooterCredit() {return (<footer className='text-center text-sm py-4'>Developed by Ovi Sarker</footer>);}
