@@ -1,11 +1,16 @@
-import mongoose from "mongoose";
+import { NextResponse } from "next/server";
+import dbConnect from "@/lib/dbConnect";
+import Mood from "@/models/Mood";
 
-const moodSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  mood: String,
-  note: String,
-  sentiment: Number,
-  createdAt: { type: Date, default: Date.now }
-});
+export async function GET() {
+  await dbConnect();
+  const moods = await Mood.find().sort({ createdAt: -1 });
+  return NextResponse.json(moods);
+}
 
-export default mongoose.models.Mood || mongoose.model("Mood", moodSchema);
+export async function POST(request) {
+  await dbConnect();
+  const body = await request.json();
+  const newMood = await Mood.create(body);
+  return NextResponse.json(newMood, { status: 201 });
+}
