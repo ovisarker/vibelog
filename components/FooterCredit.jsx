@@ -1,1 +1,7 @@
-export default function FooterCredit() {return (<footer className='text-center text-sm py-4'>Developed by Ovi Sarker</footer>);}
+export default function FooterCredit() {
+  return (
+    <footer className="text-center text-xs text-gray-400 py-3 mt-auto">
+      Developed by <span className="text-indigo-500 font-semibold">Ovi Sarker</span>
+    </footer>
+  );
+}
