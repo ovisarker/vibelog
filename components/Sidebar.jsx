@@ -1,73 +1,62 @@
 "use client";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
+import { motion } from "framer-motion";
+import {
+  Home,
+  BarChart3,
+  User,
+  Smile,
+  Settings,
+  LogOut,
+  Menu,
+  X,
+} from "lucide-react";
 
 export default function Sidebar() {
-  const pathname = usePathname();
-  const router = useRouter();
-  const [isOpen, setIsOpen] = useState(true);
+  const [open, setOpen] = useState(true);
 
-  const handleLogout = async () => {
-    await fetch("/api/auth/logout", { method: "POST" });
-    router.push("/login");
-  };
-
-  const navItems = [
-    { name: "Dashboard", href: "/dashboard", icon: "📊" },
-    { name: "Profile", href: "/profile", icon: "👤" },
-    { name: "Moods", href: "/moods", icon: "🧠" },
-    { name: "Settings", href: "/settings", icon: "⚙️" },
+  const menuItems = [
+    { name: "Dashboard", href: "/dashboard", icon: <Home size={20} /> },
+    { name: "Profile", href: "/profile", icon: <User size={20} /> },
+    { name: "Moods", href: "/moods", icon: <Smile size={20} /> },
+    { name: "Analytics", href: "/analytics", icon: <BarChart3 size={20} /> },
+    { name: "Settings", href: "/settings", icon: <Settings size={20} /> },
   ];
 
   return (
-    <aside
-      className={`${
-        isOpen ? "w-64" : "w-16"
-      } bg-gray-900 text-gray-100 min-h-screen transition-all duration-300 flex flex-col`}
+    <motion.aside
+      animate={{ width: open ? 220 : 60 }}
+      className="h-screen bg-gray-900 text-gray-200 fixed top-0 left-0 flex flex-col shadow-xl z-50"
     >
-      <div className="flex items-center justify-between px-4 py-4 border-b border-gray-700">
-        <h1
-          className={`text-lg font-bold transition-all duration-300 ${
-            isOpen ? "opacity-100" : "opacity-0 w-0"
-          }`}
-        >
-          VibeLog
-        </h1>
+      <div className="flex items-center justify-between p-4 border-b border-gray-700">
+        {open && <h1 className="text-xl font-bold">VibeLog 💫</h1>}
         <button
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={() => setOpen(!open)}
           className="text-gray-400 hover:text-white"
         >
-          ☰
+          {open ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
 
-      <nav className="flex-1 px-2 py-4 space-y-2">
-        {navItems.map((item) => (
+      <nav className="flex-1 overflow-y-auto p-3">
+        {menuItems.map((item) => (
           <Link
-            key={item.href}
+            key={item.name}
             href={item.href}
-            className={`flex items-center gap-3 p-2 rounded-md transition-all ${
-              pathname === item.href
-                ? "bg-indigo-600 text-white"
-                : "text-gray-300 hover:bg-gray-800 hover:text-white"
-            }`}
+            className="flex items-center gap-3 p-2 rounded-md hover:bg-gray-800 transition"
           >
-            <span className="text-lg">{item.icon}</span>
-            {isOpen && <span>{item.name}</span>}
+            {item.icon}
+            {open && <span>{item.name}</span>}
           </Link>
         ))}
       </nav>
 
-      <div className="p-4 border-t border-gray-700">
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-2 text-red-400 hover:text-red-300"
-        >
-          <span>🚪</span>
-          {isOpen && <span>Logout</span>}
+      <div className="p-3 border-t border-gray-700">
+        <button className="flex items-center gap-2 text-red-400 hover:text-red-300">
+          <LogOut size={18} /> {open && <span>Logout</span>}
         </button>
       </div>
-    </aside>
+    </motion.aside>
   );
 }
