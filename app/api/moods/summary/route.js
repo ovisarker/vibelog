@@ -1,27 +1,18 @@
-import { NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
-import Mood from "../../../../models/Mood";
-import { dbConnect } from "../../../../lib/dbConnect";
+// app/api/moods/summary/route.js
 
-export async function GET(req) {
+export async function GET() {
   try {
-    const token = req.headers.get("authorization")?.split(" ")[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    await dbConnect();
+    const res = await fetch("https://68f9a434ef8b2e621e7cf4fa.mockapi.io/api/v1/moods");
+    const moods = await res.json();
 
-    const moods = await Mood.find({ userId: decoded.id }).sort({ createdAt: -1 });
-    if (!moods.length)
-      return NextResponse.json({ summary: "No moods logged yet." });
+    // Calculate frequency of each mood type
+    const summary = moods.reduce((acc, mood) => {
+      acc[mood.mood] = (acc[mood.mood] || 0) + 1;
+      return acc;
+    }, {});
 
-    const avgSentiment =
-      moods.reduce((sum, m) => sum + (m.sentiment || 0), 0) / moods.length;
-
-    let summary = "Your mood this week seems balanced.";
-    if (avgSentiment > 0.3) summary = "You seem happier this week 😊";
-    else if (avgSentiment < -0.3) summary = "You’ve felt a bit low lately 😔";
-
-    return NextResponse.json({ success: true, summary });
-  } catch (error) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 400 });
+    return Response.json(summary);
+  } catch (err) {
+    return Response.json({ error: "Failed to summarize moods" }, { status: 500 });
   }
 }
