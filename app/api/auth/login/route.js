@@ -1,17 +1,17 @@
-import { NextResponse } from "next/server";
-import { loginUser, generateToken } from "../../../../lib/auth";
-
 export async function POST(req) {
   try {
     const { email, password } = await req.json();
-    const user = await loginUser(email, password);
-    const token = generateToken(user);
 
-    return NextResponse.json(
-      { success: true, token, user: { name: user.name, email: user.email } },
-      { status: 200 }
-    );
-  } catch (error) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 400 });
+    const res = await fetch("https://68f9a434ef8b2e621e7cf4fa.mockapi.io/users");
+    const users = await res.json();
+
+    const user = users.find(u => u.email === email && u.password === password);
+
+    if (!user)
+      return new Response(JSON.stringify({ message: "Invalid credentials" }), { status: 401 });
+
+    return new Response(JSON.stringify({ message: "Login successful", user }), { status: 200 });
+  } catch (err) {
+    return new Response(JSON.stringify({ message: err.message }), { status: 500 });
   }
 }
