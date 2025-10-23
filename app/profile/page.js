@@ -71,11 +71,8 @@ export default function ProfilePage() {
             {/* Profile Content */}
             <div className="relative -mt-14 px-6 pb-8 text-center">
               <div className="inline-block bg-white dark:bg-gray-900 p-2 rounded-full shadow-md">
-                <img
-                  src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user.name || "User"}`}
-                  alt="Avatar"
-                  className="w-24 h-24 rounded-full"
-                />
+               <Image src={`https://api.dicebear.com/8.x/avataaars/svg?seed=${user.name}`} width={128} height={128} />
+
               </div>
 
               <h2 className="text-2xl font-bold mt-4">{user.name || "Unknown User"}</h2>
